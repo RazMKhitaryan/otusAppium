@@ -1,19 +1,31 @@
-package tests;
+package example;
 
 import io.appium.java_client.AppiumDriver;
 import java.net.URL;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.testng.annotations.AfterMethod;
+import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.BeforeSuite;
 
 public abstract class BaseTest {
 
   private static ThreadLocal<WebDriver> DRIVER = new ThreadLocal<>();
 
+  @BeforeSuite
+  public void appiumStart() throws Exception {
+    AppiumServerManager.startAppiumServer();
+  }
+
+  @AfterSuite
+  public void killAppium() throws Exception {
+    AppiumServerManager.stopAppiumServer();
+  }
+
   @BeforeMethod
   public void setUp() throws Exception {
-    String runType = System.getProperty("runType", "remote").toLowerCase();
+    String runType = System.getProperty("runType", "local").toLowerCase();
 
     DesiredCapabilities capabilities = new DesiredCapabilities();
     capabilities.setCapability("platformName", "Android");
@@ -30,7 +42,7 @@ public abstract class BaseTest {
       remoteUrl = new URL("http://45.132.17.22:4723/wd/hub");
     } else {
       capabilities.setCapability("appium:deviceName", "emulator-5554");
-      String appPath = System.getProperty("user.dir") + "/src/test/java/resources/skoda.apk";
+      String appPath = System.getProperty("user.dir") + "/src/test/resources/skoda.apk";
       capabilities.setCapability("appium:app", appPath);
       remoteUrl = new URL("http://127.0.0.1:4723");
     }
@@ -47,7 +59,7 @@ public abstract class BaseTest {
     }
   }
 
-  public WebDriver getDriver() {
+  protected WebDriver getDriver() {
     return DRIVER.get();
   }
 }

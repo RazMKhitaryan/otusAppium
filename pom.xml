@@ -11,7 +11,12 @@
     <properties>
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
-    </properties>
+        <maven.checkstyle.version>3.6.0</maven.checkstyle.version>
+        <maven.compiler.version>3.14.0</maven.compiler.version>
+        <maven.spotbugs.version>4.9.3.0</maven.spotbugs.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+</properties>
 
     <dependencies>
         <!-- Appium Java Client -->
@@ -103,8 +108,41 @@
                 <configuration>
                     <source>21</source>
                     <target>21</target>
+                    <encoding>UTF-8</encoding>
                 </configuration>
             </plugin>
+            <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-checkstyle-plugin</artifactId>
+            <version>${maven.checkstyle.version}</version>
+            <configuration>
+                <includeTestSourceDirectory>true</includeTestSourceDirectory>
+                <configLocation>${project.build.sourceDirectory}/../resources/checkstyle.xml</configLocation>
+            </configuration>
+            <executions>
+                <execution>
+                    <id>analyze-compile</id>
+                    <phase>compile</phase>
+                    <goals>
+                        <goal>check</goal>
+                    </goals>
+                </execution>
+            </executions>
+        </plugin>
+        <plugin>
+            <groupId>com.github.spotbugs</groupId>
+            <artifactId>spotbugs-maven-plugin</artifactId>
+            <version>${maven.spotbugs.version}</version>
+            <executions>
+                <execution>
+                    <id>analyze-compile</id>
+                    <phase>compile</phase>
+                    <goals>
+                        <goal>check</goal>
+                    </goals>
+                </execution>
+            </executions>
+        </plugin>
         </plugins>
     </build>
 </project>
