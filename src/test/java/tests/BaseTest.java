@@ -1,31 +1,41 @@
 package tests;
 
+import io.appium.java_client.AppiumDriver;
 import java.net.URL;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
-import org.openqa.selenium.remote.RemoteWebDriver;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
 
-public class BaseTest {
+public abstract class BaseTest {
 
   private static ThreadLocal<WebDriver> DRIVER = new ThreadLocal<>();
 
   @BeforeMethod
   public void setUp() throws Exception {
+    String runType = System.getProperty("runType", "remote").toLowerCase();
+
     DesiredCapabilities capabilities = new DesiredCapabilities();
     capabilities.setCapability("platformName", "Android");
-    capabilities.setCapability("deviceName", "Samsung Galaxy S6");
-    capabilities.setCapability("automationName", "UiAutomator2");
-    capabilities.setCapability("app", "/root/tmp/skoda.apk");
-    capabilities.setCapability("autoGrantPermissions", true);
-    capabilities.setCapability("noReset", true);
-    capabilities.setCapability("adbExecTimeout", 60000);
-    capabilities.setCapability("uiautomator2ServerInstallTimeout", 60000);
+    capabilities.setCapability("appium:automationName", "UiAutomator2");
+    capabilities.setCapability("appium:autoGrantPermissions", true);
+    capabilities.setCapability("appium:noReset", false);
+    capabilities.setCapability("appium:uiautomator2ServerInstallTimeout", 180000); // 3 minutes
+    capabilities.setCapability("appium:adbExecTimeout", 180000);
 
-    URL remoteUrl = new URL("http://45.132.17.22:4723/wd/hub");
-    RemoteWebDriver driver = new RemoteWebDriver(remoteUrl, capabilities);
+    URL remoteUrl;
+    if ("remote".equals(runType)) {
+      capabilities.setCapability("appium:deviceName", "emulator-5554");
+      capabilities.setCapability("appium:app", "/root/tmp/skoda.apk");
+      remoteUrl = new URL("http://45.132.17.22:4723/wd/hub");
+    } else {
+      capabilities.setCapability("appium:deviceName", "emulator-5554");
+      String appPath = System.getProperty("user.dir") + "/src/test/java/resources/skoda.apk";
+      capabilities.setCapability("appium:app", appPath);
+      remoteUrl = new URL("http://127.0.0.1:4723");
+    }
+
+    AppiumDriver driver = new AppiumDriver(remoteUrl, capabilities);
     DRIVER.set(driver);
   }
 
@@ -37,8 +47,7 @@ public class BaseTest {
     }
   }
 
-  @Test
-  public void appShouldOpen() {
-    System.out.println("App launched.");
+  public WebDriver getDriver() {
+    return DRIVER.get();
   }
 }
