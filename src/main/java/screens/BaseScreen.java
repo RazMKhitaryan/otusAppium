@@ -1,15 +1,15 @@
 package screens;
 
 import com.codeborne.selenide.SelenideElement;
-import factory.DriverFactory;
-import io.appium.java_client.AppiumDriver;
+import com.codeborne.selenide.WebDriverRunner;
+import org.openqa.selenium.WebDriver;
 
 public abstract class BaseScreen {
 
-  private AppiumDriver driver;
+  private WebDriver driver;
 
   public BaseScreen() {
-    this.driver = new DriverFactory().getDriver();
+    this.driver = WebDriverRunner.getWebDriver();
   }
 
   public String getCurrentActivity() {
