@@ -1,4 +1,4 @@
-package example;
+package factory;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -8,11 +8,11 @@ import java.nio.charset.StandardCharsets;
 
 public abstract class AppiumServerManager {
 
+  private static String runType = System.getProperty("runType").toLowerCase();
   private static final String APPIUM_LOG = "appium.log";
   private static final String APPIUM_PID_FILE = "appium.pid";
 
   public static void startAppiumServer() throws Exception {
-    String runType = System.getProperty("runType", "local");
     if (runType == null || runType.equals("remote")) {
       return;
     }
@@ -25,7 +25,6 @@ public abstract class AppiumServerManager {
   }
 
   public static void stopAppiumServer() throws Exception {
-    String runType = System.getProperty("runType", "local");
     if (runType == null || runType.equals("remote")) {
       return;
     }

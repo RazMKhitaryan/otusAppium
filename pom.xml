@@ -16,7 +16,9 @@
         <maven.spotbugs.version>4.9.3.0</maven.spotbugs.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-</properties>
+        <maven.surefire.version>3.5.3</maven.surefire.version>
+        <runType>local</runType>
+    </properties>
 
     <dependencies>
         <!-- Appium Java Client -->
@@ -100,6 +102,18 @@
 
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>${maven.surefire.version}</version>
+                <configuration>
+                    <systemPropertyVariables>
+                        <runType>${runType}</runType>
+                    </systemPropertyVariables>
+                    <parallel>methods</parallel>
+                    <threadCount>${threadCount}</threadCount>
+                </configuration>
+            </plugin>
             <!-- Maven Compiler Plugin -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
