@@ -22,23 +22,18 @@ pipeline {
                 sh "mvn clean test -DrunType=remote"
             }
         }
-
-        stage('Allure Report Publisher') {
-            steps {
-                echo "Tests finished, publishing Allure results..."
-                allure([
-                    includeProperties: false,
-                    jdk: '',
-                    properties: [],
-                    reportBuildPolicy: 'ALWAYS',
-                    results: [[path: 'allure-results']]
-                ])
-            }
-        }
     }
 
     post {
         always {
+            echo "Publishing Allure results..."
+            allure([
+                includeProperties: false,
+                jdk: '',
+                properties: [],
+                reportBuildPolicy: 'ALWAYS',
+                results: [[path: 'allure-results']]
+            ])
             echo "Pipeline finished"
         }
     }
