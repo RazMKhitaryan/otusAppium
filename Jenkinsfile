@@ -34,6 +34,28 @@ pipeline {
                 reportBuildPolicy: 'ALWAYS',
                 results: [[path: 'allure-results']]
             ])
+
+            sh 'allure generate --clean allure-results'
+             script {
+             def summaryFile = 'allure-report/widgets/summary.json'
+             def summaryContent = readFile(summaryFile)
+             def json = readJSON text: summaryContent
+
+             def passedCount = json.statistic.passed
+             def totalCount = json.statistic.total
+             def message = "Allure Report: ${passedCount}/${totalCount} tests passed ✅"
+
+             // Telegram bot token & chat ID
+             def botToken = '8228531250:AAF4-CNqenOBmhO_U0qOq1pcpvMDNY0RvBU'
+             def chatId = '6877916742'  // Replace with your chat ID
+
+             // Send message to Telegram
+             sh """
+             curl -s -X POST https://api.telegram.org/bot${botToken}/sendMessage \
+                  -d chat_id=${chatId} \
+                  -d text="${message}"
+             """
+             }
             echo "Pipeline finished"
         }
     }
