@@ -23,7 +23,7 @@ public class DriverFactory {
     if ("remote".equals(runType)) {
       capabilities.setCapability("appium:deviceName", "emulator-5554");
       capabilities.setCapability("appium:app", "/root/tmp/skoda.apk");
-      remoteUrl = new URL("http://45.132.17.22:4723");
+      remoteUrl = new URL("http://45.132.17.22:4723/wd/hub");
     } else {
       capabilities.setCapability("appium:deviceName", "emulator-5554");
       String appPath = System.getProperty("user.dir") + "/src/test/resources/skoda.apk";
