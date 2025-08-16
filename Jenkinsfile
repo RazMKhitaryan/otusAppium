@@ -38,6 +38,8 @@ pipeline {
             ])
 
             sh 'allure generate --clean allure-results'
+            echo "allure folder generated"
+
             script {
                 def summaryFile = 'allure-report/widgets/summary.json'
                 def summaryContent = readFile(summaryFile)
