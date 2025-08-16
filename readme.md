@@ -2,5 +2,5 @@
 ## 🧾 command for run
 
 ```
-mvn clean test -DrunType=local
+mvn clean test -DrunType=remote
 ```
