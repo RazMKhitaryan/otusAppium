@@ -1,15 +1,13 @@
 package skoda;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import extentions.UIExtension;
+import static org.testng.AssertJUnit.assertTrue;
+
 import jakarta.inject.Inject;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
+import org.testng.annotations.Test;
 import screens.HomeScreen;
 
-@ExtendWith(UIExtension.class)
-public class SkodaTest {
+public class SkodaTest extends TestBase {
 
   @Inject
   HomeScreen homeScreen;
