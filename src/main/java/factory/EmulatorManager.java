@@ -8,8 +8,12 @@ import java.nio.charset.StandardCharsets;
 public class EmulatorManager {
 
   private static Process emulatorProcess;
+  private static String runType = System.getProperty("runType").toLowerCase();
 
   public static void startEmulator() throws IOException, InterruptedException {
+    if (runType == null || runType.equals("remote")) {
+      return;
+    }
     System.out.println("🔄 Starting Android Emulator...");
     String emulatorPath = "/Users/razmik/Library/Android/sdk/emulator/emulator";
     ProcessBuilder builder = new ProcessBuilder(emulatorPath, "-avd", "Pixel", "-netdelay", "none",
@@ -21,6 +25,9 @@ public class EmulatorManager {
   }
 
   public static void stopEmulator() throws IOException, InterruptedException {
+    if (runType == null || runType.equals("remote")) {
+      return;
+    }
     System.out.println("🛑 Stopping Android Emulator...");
     Process killProcess = new ProcessBuilder("adb", "emu", "kill").start();
     killProcess.waitFor();
