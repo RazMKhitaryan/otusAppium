@@ -31,4 +31,5 @@ public class SkodaTest extends TestBase {
   public void servicesButtonTest() {
     assertTrue(homeScreen.isServicesButtonDisplayed());
   }
+
 }
