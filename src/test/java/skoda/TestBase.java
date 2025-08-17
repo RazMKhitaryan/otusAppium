@@ -8,9 +8,9 @@ import factory.EmulatorManager;
 import io.appium.java_client.AppiumDriver;
 import module.GuiceScreenModule;
 import org.testng.annotations.AfterMethod;
+import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.BeforeSuite;
-import org.testng.annotations.AfterSuite;
 
 public class TestBase {
 
@@ -20,7 +20,6 @@ public class TestBase {
   /** Runs once before all tests in the suite */
   @BeforeSuite
   public void beforeSuite() throws Exception {
-    // Start Emulator and Appium Server once before suite
     EmulatorManager.startEmulator();
     AppiumServerManager.startAppiumServer();
   }
@@ -29,9 +28,10 @@ public class TestBase {
   @BeforeMethod
   public void beforeEach() {
     try {
-      Guice.createInjector(new GuiceScreenModule()).injectMembers(this);
       driver = driverFactory.setUp();
       WebDriverRunner.setWebDriver(driver);
+      Guice.createInjector(new GuiceScreenModule())
+          .injectMembers(this);
     } catch (Exception e) {
       e.printStackTrace();
     }

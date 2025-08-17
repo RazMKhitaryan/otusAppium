@@ -19,9 +19,9 @@
         <surefire.version>3.1.2</surefire.version>
         <allure.version>2.23.0</allure.version>
         <guice.version>7.0.0</guice.version>
-        <selenium.version>4.8.3</selenium.version>
+        <selenium.version>4.34.0</selenium.version>
         <selenide.version>6.18.0</selenide.version>
-        <appium.version>8.5.1</appium.version>
+        <appium.version>8.6.0</appium.version>
     </properties>
 
     <dependencies>

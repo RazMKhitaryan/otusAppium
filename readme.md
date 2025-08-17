@@ -2,5 +2,5 @@
 ## 🧾 command for run
 
 ```
-mvn clean install -DrunType=local
+mvn clean install -DrunType=remote
 ```
