@@ -17,6 +17,14 @@ pipeline {
         )
     }
 
+    triggers {
+        // Trigger on SCM changes (after every merge/push)
+        pollSCM('* * * * *') // adjust frequency as needed
+
+        // Trigger every day at 21:00
+        cron('0 21 * * *')
+    }
+
     stages {
         stage('Test Allure CLI') {
             steps {
@@ -62,8 +70,8 @@ pipeline {
                     def passed = summary.statistic.passed ?: 0
 
                     def message = """✅ Mobile Test Execution Finished
-Passed: ${passed}/${total}
-"""
+                    Passed: ${passed}/${total}
+                    """
 
                     sh """
                         curl -s -X POST https://api.telegram.org/bot8228531250:AAF4-CNqenOBmhO_U0qOq1pcpvMDNY0RvBU/sendMessage \
