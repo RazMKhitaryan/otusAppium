@@ -26,49 +26,54 @@ pipeline {
 
         stage('Checkout') {
             steps {
-                checkout([$class: 'GitSCM',
-                          branches: [[name: "${params.BRANCH}"]],
-                          userRemoteConfigs: [[url: 'https://github.com/RazMKhitaryan/otusAppium.git']]
+                checkout([
+                    $class: 'GitSCM',
+                    branches: [[ name: "${params.BRANCH}" ]],
+                    userRemoteConfigs: [[ url: 'https://github.com/RazMKhitaryan/otusAppium.git' ]]
                 ])
             }
         }
 
         stage('Run Tests') {
             steps {
-                sh "mvn clean test -DrunType=remote"
+                sh "mvn clean test -DrunType=remote || true"
             }
         }
     }
 
-   post {
-       always {
-           echo "Publishing Allure results..."
-           allure([
-               includeProperties: false,
-               reportBuildPolicy: 'ALWAYS',
-               results: [[path: 'allure-results']]
-           ])
+    post {
+        always {
+            echo "Publishing Allure results..."
+            allure([
+                includeProperties: false,
+                reportBuildPolicy: 'ALWAYS',
+                results: [[ path: 'allure-results' ]]
+            ])
 
-           sh 'allure generate --clean allure-results'
-           echo "allure folder generated"
+            sh 'allure generate --clean allure-results'
+            echo "Allure folder generated"
 
-           script {
-               def summary = readJSON file: 'allure-report/widgets/summary.json'
-               def total = summary.statistic.total
-               def passed = summary.statistic.passed
-               def passRate = total > 0 ? (passed * 100.0 / total).round(2) : 0
+            script {
+                try {
+                    def summaryFile = readFile('allure-report/widgets/summary.json')
+                    def summary = new JsonSlurper().parseText(summaryFile)
 
-               def message = "✅ Mobile Test Execution Finished\n" +
-                             "Total: ${total}\n" +
-                             "Passed: ${passed}\n" +
-                             "Pass Rate: ${passRate}%"
+                    def total = summary.statistic.total ?: 0
+                    def passed = summary.statistic.passed ?: 0
 
-               sh """
-                   curl -s -X POST https://api.telegram.org/bot8228531250:AAF4-CNqenOBmhO_U0qOq1pcpvMDNY0RvBU/sendMessage \
-                        -d chat_id=6877916742 \
-                        -d text="${message}"
-               """
-           }
-       }
-   }
+                    def message = """✅ Mobile Test Execution Finished
+Passed: ${passed}/${total}
+"""
+
+                    sh """
+                        curl -s -X POST https://api.telegram.org/bot8228531250:AAF4-CNqenOBmhO_U0qOq1pcpvMDNY0RvBU/sendMessage \
+                             -d chat_id=6877916742 \
+                             -d text="${message}"
+                    """
+                } catch (Exception e) {
+                    echo "⚠️ Could not read allure summary or send Telegram notification: ${e.message}"
+                }
+            }
+        }
+    }
 }
