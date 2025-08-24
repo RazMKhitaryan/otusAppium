@@ -66,7 +66,7 @@ node('maven') {
 
                     def total = summary.statistic.total ?: 0
                     def passed = summary.statistic.passed ?: 0
-                    def message = "📡 API Test Execution Finished\n" +
+                    def message = "📱 Mobile Test Execution Finished\n" +
                                   "✅ Passed: ${passed}/${total}\n" +
                                   "📊 Allure Report: ${env.BUILD_URL}allure"
 
