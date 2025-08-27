@@ -47,7 +47,7 @@ node('maven') {
             """
 
             // Copy results from container
-            sh "docker cp mobile_tests:/app/target/allure-results ${WORKSPACE}/ || true"
+          //  sh "docker cp mobile_tests:/app/target/allure-results ${WORKSPACE}/ || true"
             sh "docker cp mobile_tests:/app/allure-results ${WORKSPACE}/ || true"
             sh "docker rm -f mobile_tests || true"
         }
@@ -70,7 +70,7 @@ node('maven') {
                                   "✅ Passed: ${passed}/${total}\n" +
                                   "📊 Allure Report: ${env.BUILD_URL}allure"
 
-                    archiveArtifacts artifacts: 'allure-results/**', allowEmptyArchive: true
+                    archiveArtifacts artifacts: "${WORKSPACE}/allure-results/**", allowEmptyArchive: true
 
                     sh """
                        curl -s -X POST https://api.telegram.org/bot8228531250:AAF4-CNqenOBmhO_U0qOq1pcpvMDNY0RvBU/sendMessage \
